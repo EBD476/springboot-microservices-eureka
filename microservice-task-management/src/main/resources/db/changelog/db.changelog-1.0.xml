@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>	
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet  id="1"  author="rad">  
+          <sql>
+            CREATE TABLE task (
+            id BIGINT NOT NULL AUTO_INCREMENT,
+            title VARCHAR(255) NOT NULL,
+            name VARCHAR(255) NOT NULL,
+            category VARCHAR(255),
+            publish_date DATE,
+            CONSTRAINT pk_id PRIMARY KEY (id)
+            );
+        </sql>
+        <!-- <createTable  tableName="task">  
+            <column  name="id"  type="int"  autoIncrement="true">  
+                <constraints  primaryKey="true"  nullable="false"/>  
+            </column>  
+            <column  name="title"  type="varchar(50)"/>  
+            <column  name="name"  type="varchar(50)"/>  
+            <column  name="category"  type="varchar(50)"/>  
+            <column  name="publish_date"  type="date"/>  
+        </createTable>   -->
+        <rollback>
+            DROP TABLE task;
+       </rollback>
+    </changeSet> 
+
+    <changeSet  id="2"  author="rad">  
+      <sql>
+            CREATE TABLE transaction (
+            id BIGINT NOT NULL AUTO_INCREMENT,
+            task_id BIGINT NOT NULL,
+            user_id BIGINT NOT NULL,
+            date_of_issue DATETIME,
+            CONSTRAINT pk_id PRIMARY KEY (id),
+            CONSTRAINT fk_tran_task FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE ON UPDATE CASCADE
+            );
+        </sql>
+        <!-- <createTable  tableName="transaction">  
+            <column  name="id"  type="int"  autoIncrement="true">  
+                <constraints  primaryKey="true"  nullable="false"/>  
+            </column>  
+            <column  name="user_id"  type="int"/>  
+            <column  name="date_of_issue"  type="date"/>          
+        </createTable>  
+        <addForeignKeyConstraint  baseColumnNames="task_id"   
+                baseTableName="task"  
+                constraintName="fk_tran_task"  
+                deferrable="true"  
+                initiallyDeferred="true"  
+                onDelete="CASCADE"  
+                onUpdate="RESTRICT"  
+                referencedColumnNames="id"      
+                referencedTableName="task"  />  -->
+        <rollback>
+                DROP TABLE transaction;
+        </rollback>
+    </changeSet> 
+
+      <changeSet  id="3"  author="rad">  
+        <sql>
+             INSERT INTO task (title,name,category,publish_date) VALUES ('Microservice', 'Instructor 1','Programming', NOW());
+             INSERT INTO task (title,name,category,publish_date) VALUES ('Microservice', 'Instructor 2','JAVA Development', NOW());
+             INSERT INTO task (title,name,category,publish_date) VALUES ('Microservice', 'Instructor 3','PHP Development', NOW());
+        </sql>
+          <rollback>
+            TRUNCATE TABLE course;
+        </rollback>
+    </changeSet> 
+
+
+</databaseChangeLog>

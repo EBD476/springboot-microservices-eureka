@@ -1,0 +1,4 @@
+# ignore or exclude build directory
+!build/lib/*
+**/build/lib
+**build/lib/*
